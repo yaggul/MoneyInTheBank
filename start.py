@@ -1,20 +1,20 @@
-import sql_manager
+from sql_manager import SqlManager
 
 
-def main_menu():
+def main_menu(sql_manager):
     print("Welcome to our bank service. You are not logged in. \nPlease register or login")
-    
+
     while True:
         command = input("$$$>")
-        
+
         if command == 'register':
             username = input("Enter your username: ")
             password = input("Enter your password: ")
 
             sql_manager.register(username, password)
-            
+
             print("Registration Successfull")
-        
+
         elif command == 'login':
             username = input("Enter your username: ")
             password = input("Enter your password: ")
@@ -22,10 +22,10 @@ def main_menu():
             logged_user = sql_manager.login(username, password)
 
             if logged_user:
-                logged_menu(logged_user)
+                logged_menu(logged_user, sql_manager)
             else:
                 print("Login failed")
-        
+
         elif command == 'help':
             print("login - for logging in!")
             print("register - for creating new account!")
@@ -37,7 +37,7 @@ def main_menu():
             print("Not a valid command")
 
 
-def logged_menu(logged_user):
+def logged_menu(logged_user, sql_manager):
     print("Welcome you are logged in as: " + logged_user.get_username())
     while True:
         command = input("Logged>>")
@@ -54,7 +54,7 @@ def logged_menu(logged_user):
         elif command == 'change-message':
             new_message = input("Enter your new message: ")
             sql_manager.change_message(new_message, logged_user)
-        
+
         elif command == 'show-message':
             print(logged_user.get_message())
 
@@ -66,8 +66,9 @@ def logged_menu(logged_user):
 
 
 def main():
-    sql_manager.create_clients_table()
-    main_menu()
+    sql_manager = SqlManager()
+    sql_manager.create_structure()
+    main_menu(sql_manager)
 
 if __name__ == '__main__':
     main()
